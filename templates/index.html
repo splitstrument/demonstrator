@@ -1,0 +1,50 @@
+$def with (trainings)
+
+<html lang="en">
+<head>
+    <title>Splitter Demonstrator</title>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="display: flex;">
+<div style="margin: auto;">
+    <h1>Source Separation Demonstrator</h1>
+    <p>
+        This tool allows easy access to different trained models that will split any song into some instrument and rest
+        parts. Either upload your own song or give us a YouTube link to process. YouTube links will take priority when
+        both are entered.
+    </p>
+    <form method="POST" enctype="multipart/form-data" action="/splitter">
+        <fieldset>
+            <legend>Split a song</legend>
+            <div class="input">
+                <label for="training">Choose an engine:</label>
+                <select name="training" id="training">
+                    $for training in trainings:
+                    <option value="$training['folder']">$training['name']</option>
+                </select>
+            </div>
+            <div class="row">
+                <label for="youtube">Enter a YouTube link:</label>
+                <input type="url" name="youtube" id="youtube" required/>
+            </div>
+            <div class="row">
+                <label for="song">Upload a song:</label>
+                <input type="file" name="song" id="song" required/>
+            </div>
+            <div class="row">
+                <button type="submit" class="primary">Split!</button>
+            </div>
+        </fieldset>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputs = Array.from(document.querySelectorAll('input[name=youtube], input[name=song]'));
+            const inputListener = e => inputs.filter(i => i !== e.target).forEach(i => i.required = !e.target.value.length);
+
+            inputs.forEach(i => i.addEventListener('input', inputListener));
+        });
+    </script>
+</div>
+</body>
+</html>
